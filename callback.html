@@ -1,0 +1,34 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="referrer" content="no-referrer"><meta name="robots" content="noindex">
+<title>CreatorAI Sign-in</title><link rel="stylesheet" href="style.css"></head><body><main>
+<h1>TikTok sign-in</h1>
+<div class="card" id="box"><p>Reading result…</p></div>
+<p class="muted">This page runs only in your browser. It does not send the code anywhere.</p>
+<script>
+(function () {
+  var p = new URLSearchParams(window.location.search);
+  var code = p.get("code"), state = p.get("state"), err = p.get("error");
+  // Xoá query khỏi thanh địa chỉ để code không nằm lại trong lịch sử trình duyệt
+  if (window.location.search) history.replaceState(null, "", window.location.pathname);
+  var box = document.getElementById("box");
+  box.textContent = "";
+  function line(label, value) {
+    var h = document.createElement("p"); h.textContent = label; box.appendChild(h);
+    var c = document.createElement("span"); c.className = "code"; c.textContent = value; box.appendChild(c);
+    return c;
+  }
+  if (err) {
+    line("Error", err + (p.get("error_description") ? " — " + p.get("error_description") : ""));
+    return;
+  }
+  if (!code) { line("Result", "No code found. Start again with: creator tiktok auth-url"); return; }
+  line("state (must match the one printed by auth-url)", state || "(none)");
+  line("code — paste this into: creator tiktok exchange", code);
+  var b = document.createElement("button"); b.textContent = "Copy code";
+  b.onclick = function () {
+    navigator.clipboard.writeText(code).then(function () { b.textContent = "Copied"; });
+  };
+  box.appendChild(b);
+})();
+</script>
+</main></body></html>
